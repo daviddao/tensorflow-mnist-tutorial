@@ -59,7 +59,7 @@ def numpy_format_mnist_images(X, Y, Y_, n=100, lines=10):
     for imslice in range(lines):
         Islices.append(np.concatenate(list(I[(imslice*n//lines):((imslice+1)*n//lines)]), axis=1))
     I = np.concatenate(Islices, axis=0)
-
+    return I
 
 # X: tensor of shape [100+, 28, 28, 1] containing a batch of images (float32)
 # Y: tensor of shape [100+, 10] containing recognised digits (one-hot vectors)

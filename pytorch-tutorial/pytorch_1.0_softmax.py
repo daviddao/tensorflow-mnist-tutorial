@@ -27,7 +27,7 @@ def build_model(input_dim, output_dim):
 
 # Build MNIST model
 model = build_model(784, 10) 
-optimizer = torch.optim.SGD(model.parameters(), lr=0.005) 
+optimizer = torch.optim.SGD(model.parameters(), lr=0.1) 
 loss_fn = torch.nn.CrossEntropyLoss()
 
 # Extract the weights and biases
@@ -54,13 +54,12 @@ def training_step(i, update_test_data, update_train_data):
         b = biases.numpy().reshape(-1)
         w.sort()
         b.sort()
-        datavis.append_test_curves_data(i, 0.3, loss.data[0])
+        datavis.append_training_curves_data(i, 0.3, 0.3)
         datavis.append_data_histograms(i, w, b)
         x_np = x.numpy()
         y_pred_np = np.argmax(y_pred.data.numpy(), axis=1)
         y_np = y.numpy()
         im = pytorchvisu.numpy_format_mnist_images(x_np, y_pred_np, y_np)
-        print(im, x_np, y_pred_np, y_np)
         datavis.update_image1(im)
         print(str(i) + ": training loss: " + str(loss.data[0]))
 
