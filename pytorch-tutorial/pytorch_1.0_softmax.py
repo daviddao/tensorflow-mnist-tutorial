@@ -35,6 +35,9 @@ params = model.state_dict()
 weights = params['linear.weight']
 biases = params['linear.bias']
 
+w = weights.numpy().reshape(-1)
+b = biases.numpy().reshape(-1)
+
 datavis = pytorchvisu.MnistDataVis()
 
 # Visualisation
@@ -50,12 +53,13 @@ def training_step(i, update_test_data, update_train_data):
     optimizer.step()
 
     if update_train_data:
-        w = weights.numpy().reshape(-1)
-        b = biases.numpy().reshape(-1)
-        w.sort()
-        b.sort()
+        
         datavis.append_training_curves_data(i, 0.3, 0.3)
-        datavis.append_data_histograms(i, w, b)
+
+        w_ = np.sort(w)
+        b_ = np.sort(b)
+
+        datavis.append_data_histograms(i, w_, b_)
         x_np = x.numpy()
         y_pred_np = np.argmax(y_pred.data.numpy(), axis=1)
         y_np = y.numpy()
@@ -65,10 +69,6 @@ def training_step(i, update_test_data, update_train_data):
 
     if update_test_data:
         _, (xt, yt) = next(enumerate(mnist_te))
-        w = weights.numpy().reshape(-1)
-        b = biases.numpy().reshape(-1)
-        w.sort()
-        b.sort()
         yt_pred = model(Variable(xt.view(-1,28*28)))
         loss_t = loss_fn(yt_pred, Variable(yt))
         datavis.append_test_curves_data(i, 0.2, loss_t.data[0])
